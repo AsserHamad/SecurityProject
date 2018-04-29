@@ -1,11 +1,25 @@
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class Main {
-	
+	ArrayList<Block> blockChain = new ArrayList<Block>();
 	ArrayList<User> users = new ArrayList<User>();
 	public static int userIds = 0; //auto increment IDs for users to guarantee ID uniqueness
 	public static int transIds = 0; //auto increment IDs for transactions to guarantee ID uniqueness
+	
+	public void addBlock(Block block) {
+		if(!block.prevHash.equals(blockChain.get(blockChain.size()-1).hash)) {
+			System.out.println("Hash pointer and hash of previous block do not match.");
+			return;
+		}
+		
+		while(!block.hash.substring(0, 2).equals("00")) { //Proof of work. It will keep trying new nonces until the hash starts with two 0's
+			block.nonce++; //Trying a different nonce
+			block.calculateHash();
+		}
+		blockChain.add(block); //Exited loop, so hash is valid, so add to blockchain
+	}
 	
 	public void populateUsers() {
 		String []names = new String[] {"Asser","Yara","Ahmed","Joseph","Josuke","Rana","Jojo","Maged","Magamigo","Jotaro", "Omar", "Alaa", "Amr", "Mougy", "Goofy", "Scrooge", "Soosoo", "Tooto", "Balabizo", "Chico"};
